@@ -46,7 +46,7 @@ uat_job:
     name: uat
 
 # PROD deployment job
-uat_job:
+prod_job:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
