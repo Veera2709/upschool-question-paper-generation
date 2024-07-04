@@ -1,60 +1,54 @@
-image: node:latest
+name: Deploy
 
-stages:
-  - deploy
+on:
+  push:
+    branches:
+      - dev
+      - testing
+      - uat
 
-# Dev deployment job
-dev_job:
-  stage: deploy
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$DEV_SERVER_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-  script:
-    - bash .dev-gitlab-deploy.sh
-  environment:
-    name: development
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-# Testing deployment job
-testing_job:
-  stage: deploy
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "testing"'
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$TESTING_SERVER_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-  script:
-    - bash .testing-gitlab-deploy.sh
-  environment:
-    name: testing
+    env:
+      DEV_SERVER_KEY: ${{ secrets.DEV_SERVER_KEY }}
+      TESTING_SERVER_KEY: ${{ secrets.TESTING_SERVER_KEY }}
+      UAT_SERVER_KEY: ${{ secrets.UAT_SERVER_KEY }}
 
-# UAT deployment job
-uat_job:
-  stage: deploy
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "uat"'
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$UAT_SERVER_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-  script:
-    - bash .uat-gitlab-deploy.sh
-  environment:
-    name: uat
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-# PROD deployment job
-prod_job:
-  stage: deploy
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "prod"'
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$PROD_SERVER_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-  script:
-    - bash .prod-gitlab-deploy.sh
-  environment:
-    name: prod
+      - name: Set up SSH for dev
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEV_SERVER_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to dev
+        if: github.ref == 'refs/heads/dev'
+        run: bash .dev-gitlab-deploy.sh
+
+      - name: Set up SSH for testing
+        if: github.ref == 'refs/heads/testing'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TESTING_SERVER_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to testing
+        if: github.ref == 'refs/heads/testing'
+        run: bash .testing-gitlab-deploy.sh
+
+      - name: Set up SSH for uat
+        if: github.ref == 'refs/heads/uat'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.UAT_SERVER_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to uat
+        if: github.ref == 'refs/heads/uat'
+        run: bash .uat-gitlab-deploy.sh
