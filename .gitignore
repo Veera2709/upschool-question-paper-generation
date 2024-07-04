@@ -1,0 +1,13 @@
+# package directories
+node_modules
+jspm_packages
+.env
+
+# Serverless directories
+.serverless
+
+# Sonar
+.scannerwork
+
+# Folder
+.pdfsMade

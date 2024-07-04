@@ -1,0 +1,46 @@
+image: node:latest
+
+dev_job:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$DEV_SERVER_KEY"
+    - echo $DEV_SERVER_KEY
+    - echo -e "$DEV_SERVER_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - bash .dev-gitlab-deploy.sh
+  environment:
+    name: development
+
+testing_job:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testing"'
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$TESTING_SERVER_KEY"
+    - echo $TESTING_SERVER_KEY
+    - echo -e "$TESTING_SERVER_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - bash .testing-gitlab-deploy.sh
+  environment:
+    name: testing
+
+uat_job:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "uat"'
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$UAT_SERVER_KEY"
+    - echo $UAT_SERVER_KEY
+    - echo -e "$UAT_SERVER_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - bash .uat-gitlab-deploy.sh
+  environment:
+    name: uat
