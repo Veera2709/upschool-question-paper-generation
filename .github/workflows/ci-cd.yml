@@ -27,6 +27,12 @@ jobs:
           echo "${{ secrets.DEV_SERVER_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+        env:
+          DEV_SERVER_KEY: ${{ secrets.DEV_SERVER_KEY }}
+
+      - name: Export Environment Variables
+        run: echo "export DEV_SERVER_KEY=${{ secrets.DEV_SERVER_KEY }}" >> $GITHUB_ENV
+        
       - name: Deploy to dev
         if: github.ref == 'refs/heads/dev'
         run: bash .dev-gitlab-deploy.sh
