@@ -23,10 +23,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Export DEV_SERVER - Log Secrets
-        run: echo "${{ secrets }}"
-        # run: echo "export DEV_SERVER=${{ secrets.DEV_SERVER_KEY }}" >> $GITHUB_ENV
-
       - name: Set up SSH for dev
         if: github.ref == 'refs/heads/dev'
         run: |
