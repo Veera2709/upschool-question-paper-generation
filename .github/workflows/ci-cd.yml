@@ -15,6 +15,9 @@ jobs:
       DEV_SERVER_KEY: ${{ secrets.DEV_SERVER_KEY }}
       TESTING_SERVER_KEY: ${{ secrets.TESTING_SERVER_KEY }}
       UAT_SERVER_KEY: ${{ secrets.UAT_SERVER_KEY }}
+      DEV_SERVER: ${{ secrets.DEV_SERVER }}
+      TESTING_SERVER: ${{ secrets.TESTING_SERVER }}
+      UAT_SERVER: ${{ secrets.UAT_SERVER }}
 
     steps:
       - name: Checkout code
