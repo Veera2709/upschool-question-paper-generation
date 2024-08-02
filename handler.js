@@ -40,7 +40,7 @@ if (NODE_ENV === 'dev') {
 } else if (NODE_ENV === 'uat') {
     app.set("port", process.env.PORT || 3003);
 }  else if (NODE_ENV === 'prod') {
-    app.set("port", process.env.PORT || 3004);
+    app.set("port", process.env.PORT || 3005);
 } else {
     app.set("port", process.env.PORT || 3005);
 }
