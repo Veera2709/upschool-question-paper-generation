@@ -6,6 +6,7 @@ on:
       - dev
       - testing
       - uat
+      - prod
 
 jobs:
   deploy:
@@ -55,3 +56,14 @@ jobs:
       - name: Deploy to uat
         if: github.ref == 'refs/heads/uat'
         run: bash .uat-gitlab-deploy.sh
+    
+      - name: Set up SSH for prod
+        if: github.ref == 'refs/heads/prod'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_SERVER_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to prod
+        if: github.ref == 'refs/heads/prod'
+        run: bash .prod-gitlab-deploy.sh
