@@ -39,9 +39,10 @@ if (NODE_ENV === 'dev') {
     app.set("port", process.env.PORT || 3002);
 } else if (NODE_ENV === 'uat') {
     app.set("port", process.env.PORT || 3003);
-}
-else {
+}  else if (NODE_ENV === 'prod') {
     app.set("port", process.env.PORT || 3004);
+} else {
+    app.set("port", process.env.PORT || 3005);
 }
 
 let server = http.createServer(app);
