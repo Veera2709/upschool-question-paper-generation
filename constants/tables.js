@@ -1,4 +1,5 @@
 let database_prefix = process.env.DB_PREFIX;
+console.log("DB_PREFIX : ", process.env.DB_PREFIX); 
 
 exports.TABLE_NAMES = {
     upschool_users_table: `${database_prefix}upschool_users_table`,  

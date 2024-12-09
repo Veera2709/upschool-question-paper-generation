@@ -326,8 +326,6 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
         }else{
             pdfHTML = pdfHTML.toString('utf8'); 
             
-            // console.log("pdfHTML : ", pdfHTML);
-
             let Header = `<div class="container">
                             <div class="row" style="line-height: 0.5em;">
 
@@ -349,7 +347,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
 
             pdfHTML += Header;
 
-            console.log("questionPaper.questions : ", questionPaper.questions); 
+            // console.log("questionPaper.questions : ", questionPaper.questions); 
 
             async function sectionLoop(m){
                 if(m < questionPaper.questions.length){
