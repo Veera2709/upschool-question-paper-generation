@@ -280,16 +280,17 @@ exports.createQuizQuestionAndAnswerPapers = (request, callback) => {
                       TableName : TABLE_NAMES.upschool_question_table,
                       projectionExp : ["question_id", "question_label", "answers_of_question","question_content", "question_disclaimer", "question_type", "marks", "question_status"] 
                   }
-                  commonRepository.fetchBulkDataWithProjection(fetchBulkQtnReq, async function (fetch_questions_err, get_questions_res) {
-                    if (fetch_questions_err) {
-                        console.log(fetch_questions_err);
-                        callback(fetch_questions_err, get_questions_res);
-                    } else {  
+                  const get_questions_res = await commonRepository.fetchBulkDataWithProjection3(fetchBulkQtnReq)
+                  // commonRepository.fetchBulkDataWithProjection(fetchBulkQtnReq, async function (fetch_questions_err, get_questions_res) {
+                  //   if (fetch_questions_err) {
+                  //       console.log(fetch_questions_err);
+                  //       callback(fetch_questions_err, get_questions_res);
+                  //   } else {  
                       exports.generateSignedURLsforImageAns(get_questions_res, async (fetch_questions_err, fetch_questions_res) => {
                         if(fetch_questions_err){
                           callback(400, fetch_questions_res); 
                         }else{
-                          console.log("fetch_questions_res.Items : ", fetch_questions_res.Items);
+                          console.log("fetch_questions_res.Items : ", fetch_questions_res);
 
                           let listOfSets = [];
 
@@ -298,15 +299,15 @@ exports.createQuizQuestionAndAnswerPapers = (request, callback) => {
                           let setC = []; 
 
                           await fetch_quiz_res.Items[0].quiz_question_details.qp_set_a.forEach(async (qtn) => {
-                            let qtnCheck = await fetch_questions_res.Items.filter((ele) => ele.question_id === qtn); 
+                            let qtnCheck = await fetch_questions_res.filter((ele) => ele.question_id === qtn); 
                             qtnCheck.length > 0 && setA.push(...qtnCheck); 
                           })
                           await fetch_quiz_res.Items[0].quiz_question_details.qp_set_b.forEach(async (qtn) => {
-                            let qtnCheck = await fetch_questions_res.Items.filter((ele) => ele.question_id === qtn); 
+                            let qtnCheck = await fetch_questions_res.filter((ele) => ele.question_id === qtn); 
                             qtnCheck.length > 0 && setB.push(...qtnCheck); 
                           })
                           await fetch_quiz_res.Items[0].quiz_question_details.qp_set_c.forEach(async (qtn) => {
-                            let qtnCheck = await fetch_questions_res.Items.filter((ele) => ele.question_id === qtn); 
+                            let qtnCheck = await fetch_questions_res.filter((ele) => ele.question_id === qtn); 
                             qtnCheck.length > 0 && setC.push(...qtnCheck); 
                           }) 
                           
@@ -398,8 +399,8 @@ exports.createQuizQuestionAndAnswerPapers = (request, callback) => {
                         }
                       })
 
-                    }
-                  })
+                  //   }
+                  // })
 
                 }
               })
