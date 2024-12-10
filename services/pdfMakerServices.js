@@ -319,7 +319,7 @@ exports.getAnsBlanks = async (qData) => {
 }
 
 exports.QuestionPaperService = (request, questionPaper, callback) => {
-    
+    console.log("here",questionPaper)
     fs.readFile('./HTML/htmlFormat.html', function(err, pdfHTML){
         if(err){ 
             callback(400, err)
@@ -350,6 +350,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
             // console.log("questionPaper.questions : ", questionPaper.questions); 
 
             async function sectionLoop(m){
+                // console.log("functionloop",questionPaper.questions.length)
                 if(m < questionPaper.questions.length){
 
                     let sectionHeader = `
@@ -367,11 +368,11 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
 
                     async function qtnLoop(n){
                         if(n < questionPaper.questions[m].question_id.length){
-
+                            // console.log("questionssection",questionPaper.questions[m])
                             let e = questionPaper.questions[m].question_id[n]; 
 
                             let answerOfQuestion = e.answers_of_question;
-            
+                            // console.log("e",e.answers_of_question)
                             if (e.question_type === "Subjective") {
                                 if (e.question_content.includes("$$")) {
                                     let splitArray = e.question_content.split("$$");
@@ -403,7 +404,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                 qtnLoop(n); 
                             }
                             else if (e.question_type === "Objective") {
-                        
+                                console.log("content",e.question_content)
                                 pdfHTML = pdfHTML + `<div class="row" style="display:flex">
                                                         <div class="col-md-1">
                                                             <p >${n+1}.&nbsp </p> 
@@ -422,6 +423,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
             
                                 async function ansOption(l){
                                     if(l < answerOfQuestion.length){
+                                        console.log(answerOfQuestion[l])
                                         let k = answerOfQuestion[l]; 
             
                                         if(k.answer_type === "Words"){
@@ -479,7 +481,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                           
                         }else{
                             // Questions Processed 
-
+                            console.log("questions processed")
                             // Display HTML : 
                             pdfHTML += `</div></body></html>`;
                                 
@@ -492,7 +494,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                 }else{
                     // Final PDF Creation : 
                    // Puppeteer : 
-
+                   console.log("final")
                     const browser = await chromium.puppeteer.launch({
                         headless: 'new',
                         args: ['--no-sandbox'],

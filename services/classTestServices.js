@@ -70,17 +70,19 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
             TableName : TABLE_NAMES.upschool_question_table,
             projectionExp : ["question_id", "question_label", "answers_of_question","question_content", "question_disclaimer", "question_type"] 
         }
-        commonRepository.fetchBulkDataWithProjection(fetchBulkQtnReq, async function (fetch_questions_err, get_questions_res) {
-          if (fetch_questions_err) {
-              console.log(fetch_questions_err);
-              callback(fetch_questions_err, get_questions_res);
-          } else {  
-
+        console.log(fetchBulkQtnReq)
+        const get_questions_res = await commonRepository.fetchBulkDataWithProjection3(fetchBulkQtnReq)
+        // commonRepository.fetchBulkDataWithProjection3(fetchBulkQtnReq, async function (fetch_questions_err, get_questions_res) {
+        //   if (fetch_questions_err) {
+        //       console.log(fetch_questions_err);
+        //       callback(fetch_questions_err, get_questions_res);
+        //   } else {  
+            console.log({get_questions_res})
             exports.generateSignedURLsforImageAns(get_questions_res, (fetch_questions_err, fetch_questions_res) => {
               if(fetch_questions_err){
                 callback(400, fetch_questions_res); 
               }else{
-
+                console.log("data",fetch_questions_res)
                 // Fetch BluePrint : 
                 blueprintRepository.fetchBlueprintById(request, async function (fetch_blueprint_err, fetch_blueprint_res) {
                   if (fetch_blueprint_err) {
@@ -109,13 +111,16 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
                         }); 
                         
                         finalQuestionPaper.question_paper_name = fetch_question_paper_res.Items[0].question_paper_name; 
+                        // console.log("check!",fetch_question_paper_res.Items[0].questions)
                         finalQuestionPaper.questions = fetch_question_paper_res.Items[0].questions; 
 
                         await finalQuestionPaper.questions.forEach((a, i) => {
 
                           a.question_id.forEach((b, j) => {
-                            let questionCheck = fetch_questions_res.Items.filter((c, k) => c.question_id === b); 
+                            
+                            let questionCheck = fetch_questions_res.filter((c, k) => c.question_id === b); 
                             questionCheck.length > 0 && ( finalQuestionPaper.questions[i].question_id[j] = questionCheck[0] )
+                            // console.log("check",questionCheck[0])
                           })
 
                         })
@@ -124,10 +129,13 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
                         await finalQuestionPaper.questions.forEach(async (questionPaper, k) => {
                           
                           await fetch_blueprint_res.Items[0].sections.forEach((bluePrint) => {
+                            console.log()
                             if(questionPaper.section_name === bluePrint.section_name){ 
                               section_marks = 0; 
                               questionPaper.question_id.forEach((Qns, i) => {
+                                
                                 bluePrint.questions.forEach((BPrint, j) => {
+                                  
                                   if(i === j){
                                     finalQuestionPaper.questions[k].question_id[i].marks  = BPrint.marks; 
                                     section_marks += Number(BPrint.marks); 
@@ -135,6 +143,7 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
                                   }
                                 })
                               })
+                              console.log(questionPaper.question_id)
                               finalQuestionPaper.questions[k].section_marks = section_marks; 
                             }
                           })
@@ -193,8 +202,8 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
               }
             })
           
-              }
-            })
+            //   }
+            // })
 
           }
         })
@@ -203,12 +212,12 @@ exports.fetchQuestionsAndCreateQuestionPaper = (request, callback) => {
 }
 
 exports.generateSignedURLsforImageAns = async (request, callback) => {
-    
-  await request.Items.forEach((ele, i) => {
+    console.log({request})
+  await request.forEach((ele, i) => {
     ele.answers_of_question.forEach(async (ans, j) => {
       if(ans.answer_type === "Image"){
         let signedURL = await helper.getS3SignedUrl(ans.answer_content);
-        request.Items[i].answers_of_question[j].answer_content_url = signedURL; 
+        request[i].answers_of_question[j].answer_content_url = signedURL; 
       }
     })
   })
