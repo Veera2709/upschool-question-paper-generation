@@ -1,4 +1,6 @@
+const { SNSClient, AddPermissionCommand, PublishCommand } = require("@aws-sdk/client-sns");
 const AWS = require("aws-sdk");
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -27,3 +29,11 @@ exports.sns = new AWS.SNS({
     region: process.env.REGION
 });
 
+exports.client = new DynamoDBClient({
+    region: process.env.REGION, // You can use any region
+    // endpoint: "http://localhost:8000",
+    credentials: {
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    },
+});

@@ -5,6 +5,7 @@ const { DATABASE_TABLE } = require("./baseRepository");
 const { successResponse } = require("./baseRepository");
 const helper = require("../helper/helper");
 const constant = require("../constants/constant");
+const { DATABASE_TABLE2 } = require("./baseRepositoryNew");
 
 exports.fetchBulkData = function (request, callback) {
   dynamoDbCon.getDB(function (DBErr, dynamoDBCall) {
@@ -295,4 +296,47 @@ exports.fetchBulkDataWithProjection = function (request, callback) {
         }
     }
   });
+};
+
+exports.fetchBulkDataWithProjection3 = async (request) => {
+  let { IdArray, fetchIdName, TableName, projectionExp } = request;
+
+  IdArray = [...new Set(IdArray)];
+  console.log("IdArray : ", IdArray);
+
+  if (IdArray.length === 0) {
+    console.log("EMPTY BULK ID");
+    return { Items: [] };
+  } else if (IdArray.length === 1) {
+    let expAttributeVal = {};
+    expAttributeVal[`:${fetchIdName}`] = IdArray[0];
+
+    let read_params = {
+      TableName: TableName,
+      KeyConditionExpression: `${fetchIdName} = :${fetchIdName}`,
+      ExpressionAttributeValues: expAttributeVal,
+      ProjectionExpression: projectionExp.join(", "),
+    };
+
+    console.log("READ PARAMS : ", read_params);
+    const result = await DATABASE_TABLE2.query(read_params);
+    return result.Items || [];
+  } else {
+    const keys = IdArray.map(id => ({
+      [fetchIdName]: id,
+    }));
+
+    let batchParams = {
+      RequestItems: {
+        [TableName]: {
+          Keys: keys,
+          ProjectionExpression: projectionExp.join(", "), 
+        },
+      },
+    };
+
+    console.log("BATCH GET PARAMS : ", JSON.stringify(batchParams, null, 2));
+    const response = await DATABASE_TABLE2.getByObjects(batchParams);
+    return response.Responses ? response.Responses[TableName] : [];
+  }
 };
