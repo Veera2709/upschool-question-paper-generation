@@ -290,8 +290,6 @@ exports.createQuizQuestionAndAnswerPapers = (request, callback) => {
                         if(fetch_questions_err){
                           callback(400, fetch_questions_res); 
                         }else{
-                          console.log("fetch_questions_res.Items : ", fetch_questions_res);
-
                           let listOfSets = [];
 
                           let setA = []; 
