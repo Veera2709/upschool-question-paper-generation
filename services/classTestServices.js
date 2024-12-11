@@ -323,7 +323,7 @@ exports.createQuizQuestionAndAnswerPapers = (request, callback) => {
                                 console.log(create_question_paper_err);
                                 callback(create_question_paper_err, create_question_paper_res);
                             } else {  
-                                quizAnswerSheetService.createQuizAnserSheet(fetch_quiz_res.Items[0], get_questions_res.Items, async function (quiz_answersheet_err, quiz_answersheet_res) {
+                                quizAnswerSheetService.createQuizAnserSheet(fetch_quiz_res.Items[0], get_questions_res, async function (quiz_answersheet_err, quiz_answersheet_res) {
                                     if (quiz_answersheet_err) {
                                         console.log(quiz_answersheet_err);
                                         callback(quiz_answersheet_err, quiz_answersheet_res);
