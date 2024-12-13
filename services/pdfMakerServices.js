@@ -53,15 +53,15 @@ exports.createAnserSheet = (request, callback) => {
                                         TableName : TABLE_NAMES.upschool_question_table,
                                         projectionExp : [ "question_id", "answers_of_question", "question_content", "question_type"]
                                     }
-                        
-                                    commonRepository.fetchBulkDataWithProjection(fetchBulkQueReq, async function (quesData_err, quesData_res) {
-                                        if (quesData_err) {
-                                            console.log(quesData_err);
-                                            callback(quesData_err, quesData_res);
-                                        } else {
+                                    const quesData_res = await commonRepository.fetchBulkDataWithProjection3(fetchBulkQueReq)
+                                    // commonRepository.fetchBulkDataWithProjection(fetchBulkQueReq, async function (quesData_err, quesData_res) {
+                                    //     if (quesData_err) {
+                                    //         console.log(quesData_err);
+                                    //         callback(quesData_err, quesData_res);
+                                    //     } else {
                                             console.log("QUESTION DATA : ", quesData_res);
 
-                                            exports.designAnswerSheetPdf(request, classData_res.Items[0], sectionData_res.Items[0], subjectData_res.Items[0], QuestionPaper_res.Items[0], quesData_res.Items, (designErr, designRes) => {
+                                            exports.designAnswerSheetPdf(request, classData_res.Items[0], sectionData_res.Items[0], subjectData_res.Items[0], QuestionPaper_res.Items[0], quesData_res, (designErr, designRes) => {
                                                 if(designErr)
                                                 {
                                                     console.log("ANSWER SHEET DESIGN ERROR");
@@ -73,8 +73,8 @@ exports.createAnserSheet = (request, callback) => {
                                                     callback(designErr, designRes);
                                                 }
                                             })
-                                        }
-                                    })
+                                    //     }
+                                    // })
                                     /** END FETCH QUESTION DATA **/
                                 }
                             }) 
