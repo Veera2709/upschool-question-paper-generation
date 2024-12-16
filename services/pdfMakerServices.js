@@ -319,7 +319,7 @@ exports.getAnsBlanks = async (qData) => {
 }
 
 exports.QuestionPaperService = (request, questionPaper, callback) => {
-    console.log("here",questionPaper)
+    // console.log("here",questionPaper)
     fs.readFile('./HTML/htmlFormat.html', function(err, pdfHTML){
         if(err){ 
             callback(400, err)
@@ -426,12 +426,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                         console.log(answerOfQuestion[l])
                                         let k = answerOfQuestion[l]; 
             
-                                        if(k.answer_type === "Words"){
-                                            ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
-                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. ${k.answer_content}</p>
-                                                            </div>`; 
-                                        }
-                                        else if(k.answer_type === "Equation"){
+                                         if(k.answer_type === "Equation"){
             
                                             let htmlMathJax = await helper.convertMathJax(k.answer_content); 
                                             console.log("htmlMathJax : ", htmlMathJax);
@@ -446,6 +441,12 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                                                 <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src=${k.answer_content_url} style="width: 100px;" alt="Image Option">
                                                             </div>`; 
                                         }
+                                        else{
+                                            ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
+                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. ${k.answer_content}</p>
+                                                            </div>`; 
+                                        }
+                                        
                                         
                                         l++
                                         ansOption(l); 
@@ -645,12 +646,7 @@ exports.QuizQuestionPaperService = (request, questionPaper, listOfSets, callback
                                     if(l < answerOfQuestion.length){
                                         let k = answerOfQuestion[l]; 
             
-                                        if(k.answer_type === "Words"){
-                                            ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
-                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. ${k.answer_content}</p>
-                                                            </div>`; 
-                                        }
-                                        else if(k.answer_type === "Equation"){
+                                         if(k.answer_type === "Equation"){
             
                                             let htmlMathJax = await helper.convertMathJax(k.answer_content); 
                                             console.log("htmlMathJax : ", htmlMathJax);
@@ -663,6 +659,11 @@ exports.QuizQuestionPaperService = (request, questionPaper, listOfSets, callback
             
                                             ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
                                                                 <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src=${k.answer_content_url} style="width: 100px;" alt="Image Option">
+                                                            </div>`; 
+                                        }
+                                        else{
+                                            ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
+                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. ${k.answer_content}</p>
                                                             </div>`; 
                                         }
                                         
