@@ -436,9 +436,11 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                                         </div>`;
                                         }
                                         else if(k.answer_type === "Image"){
-            
+                                            const bucketName = process.env.BUCKET_NAME;
+                                            const region = process.env.REGION;
+
                                             ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
-                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src=${k.answer_content_url} style="width: 100px;" alt="Image Option">
+                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src="https://${bucketName}.s3.${region}.amazonaws.com/${k.answer_content}" style="width: 100px;" alt="Image Option">
                                                             </div>`; 
                                         }
                                         else{
@@ -453,7 +455,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                     }else{
                                         // Answers Processed : 
                                          ansOptions += `</div>`; 
-            
+                                         console.log(ansOptions)
                                         pdfHTML += ansOptions; 
             
                                         n++; 
@@ -656,9 +658,10 @@ exports.QuizQuestionPaperService = (request, questionPaper, listOfSets, callback
                                                         </div>`;
                                         }
                                         else if(k.answer_type === "Image"){
-            
+                                            const bucketName = process.env.BUCKET_NAME;
+                                            const region = process.env.REGION;
                                             ansOptions += `<div class="col-md-${12/answerOfQuestion.length}" style="text-align:left;">
-                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src=${k.answer_content_url} style="width: 100px;" alt="Image Option">
+                                                                <p style="word-wrap: break-word">${String.fromCharCode(97+l)}. </p> <img src="https://${bucketName}.s3.${region}.amazonaws.com/${k.answer_content}" style="width: 100px;" alt="Image Option">
                                                             </div>`; 
                                         }
                                         else{
@@ -672,7 +675,7 @@ exports.QuizQuestionPaperService = (request, questionPaper, listOfSets, callback
                                     }else{
                                         // Answers Processed : 
                                          ansOptions += `</div>`; 
-            
+                                        console.log(ansOptions)
                                         pdfHTML += ansOptions; 
             
                                         n++; 
