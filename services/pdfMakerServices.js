@@ -128,6 +128,7 @@ exports.designAnswerSheetPdf = (request, classData, sectionData, subjectData, qu
     let oneQuestion = "";
     let answerBlanks = "";
 
+    let questionNumber = 1;
     async function sectionLoop(i)
     {
         questionArr = [];
@@ -147,7 +148,7 @@ exports.designAnswerSheetPdf = (request, classData, sectionData, subjectData, qu
                     if(oneQuestion.length > 0)
                     {
                         answerBlanks = await exports.getAnsBlanks(oneQuestion[0]);
-                        content.push({start: j+1, ol: ['Ans: ' + answerBlanks], style: 'questions'});
+                        content.push({start: questionNumber++, ol: ['Ans: ' + answerBlanks], style: 'questions'});
                         j++;
                         quesLoop(j);
                     }
@@ -349,6 +350,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
 
             // console.log("questionPaper.questions : ", questionPaper.questions); 
 
+            let questionNumber = 0;
             async function sectionLoop(m){
                 // console.log("functionloop",questionPaper.questions.length)
                 if(m < questionPaper.questions.length){
@@ -388,7 +390,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                 }
                                 pdfHTML += `<div class="row" style="display:flex">
                                                 <div class="col-md-1">
-                                                    <p >${n+1}.&nbsp </p> 
+                                                    <p >${questionNumber++}.&nbsp </p> 
                                                 </div>
                                                 <div class="col-md-10">
                                                     <div>
@@ -407,7 +409,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                                 console.log("content",e.question_content)
                                 pdfHTML = pdfHTML + `<div class="row" style="display:flex">
                                                         <div class="col-md-1">
-                                                            <p >${n+1}.&nbsp </p> 
+                                                            <p >${questionNumber++}.&nbsp </p> 
                                                         </div>
                                                         <div class="col-md-10">
                                                             <div>
@@ -466,7 +468,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
                           }else if(e.question_type === "Descriptive"){
                             pdfHTML += `<div class="row" style="display:flex">
                                             <div class="col-md-1">
-                                                <p >${n+1}.&nbsp </p> 
+                                                <p >${questionNumber++}.&nbsp </p> 
                                             </div>
                                             <div class="col-md-10">
                                                 <div>
@@ -545,6 +547,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
         }
     });
 }
+
 
 exports.QuizQuestionPaperService = (request, questionPaper, listOfSets, callback) => {
     
