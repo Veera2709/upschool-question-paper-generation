@@ -325,6 +325,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
         if(err){ 
             callback(400, err)
         }else{
+            let questionNumber = 1;
             pdfHTML = pdfHTML.toString('utf8'); 
             
             let Header = `<div class="container">
@@ -350,7 +351,7 @@ exports.QuestionPaperService = (request, questionPaper, callback) => {
 
             // console.log("questionPaper.questions : ", questionPaper.questions); 
 
-            let questionNumber = 0;
+            
             async function sectionLoop(m){
                 // console.log("functionloop",questionPaper.questions.length)
                 if(m < questionPaper.questions.length){
