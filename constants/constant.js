@@ -205,7 +205,7 @@ exports.answerSheet = {
     second: " __________________________________________,",
     odd: "__________________________________________,",
     even: " _______________________________________________,",
-    descriptiveSpace: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    descriptiveSpace: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
     findBlank: "(\\$\\$)",
 }
 
